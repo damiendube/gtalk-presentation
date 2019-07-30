@@ -1,8 +1,10 @@
+// Imports
 use actix_web::{web, App as ActixApp, HttpServer, Responder};
-use clap::{Arg, App as ClapApp, SubCommand};
-use serde_derive::{Serialize, Deserialize};
+use clap::{App as ClapApp, Arg, SubCommand};
+use serde_derive::{Deserialize, Serialize};
 use std::fs;
 
+// Struct definition
 #[derive(Debug)]
 struct Args {
     config_file: String,
@@ -15,17 +17,15 @@ struct Config {
     ip: String,
 }
 
+// Main function
 fn main() -> std::io::Result<()> {
- 
     let args = parse_args();
 
     let config = load_configs(&args.config_file);
     println!("{:?}", config);
 
     // Start Server
-    HttpServer::new(
-        || ActixApp::new().service(
-            web::resource("/").to(index)))
+    HttpServer::new(|| ActixApp::new().service(web::resource("/").to(index)))
         .bind("0.0.0.0:8080")?
         .run()
 }
@@ -35,48 +35,58 @@ fn index() -> impl Responder {
 }
 
 fn parse_args() -> Args {
-   let matches = ClapApp::new("My Super Program")
-                          .version("1.0")
-                          .author("Damien D. <damien.dube@gmail.com>")
-                          .about("Does awesome things")
-
-                          .arg(Arg::with_name("config")
-                               .short("c")
-                               .long("config")
-                               .help("Sets a custom config file")
-                               .takes_value(true)
-                               .required(false))
-
-                          .arg(Arg::with_name("input")
-                               .short("i")
-                               .long("input")
-                               .help("Sets the input file to use")
-                               .required(true)
-                               .takes_value(true))
-
-                            .arg(Arg::with_name("output")
-                               .short("o")
-                               .long("output")
-                               .help("Sets the output file to use")
-                               .required(true)
-                               .takes_value(true))
-
-                          .arg(Arg::with_name("v")
-                               .short("v")
-                               .multiple(true)
-                               .help("Sets the level of verbosity"))
-
-                          .subcommand(SubCommand::with_name("test")
-                                      .about("controls testing features")
-                                      .version("1.3")
-                                      .author("Someone E. <someone_else@other.com>")
-                                      .arg(Arg::with_name("debug")
-                                          .short("d")
-                                          .help("print debug information verbosely")))
-                          .get_matches();
+    let matches = ClapApp::new("My Super Program")
+        .version("1.0")
+        .author("Damien D. <damien.dube@gmail.com>")
+        .about("Does awesome things")
+        .arg(
+            Arg::with_name("config")
+                .short("c")
+                .long("config")
+                .help("Sets a custom config file")
+                .takes_value(true)
+                .required(false),
+        )
+        .arg(
+            Arg::with_name("input")
+                .short("i")
+                .long("input")
+                .help("Sets the input file to use")
+                .required(true)
+                .takes_value(true),
+        )
+        .arg(
+            Arg::with_name("output")
+                .short("o")
+                .long("output")
+                .help("Sets the output file to use")
+                .required(true)
+                .takes_value(true),
+        )
+        .arg(
+            Arg::with_name("v")
+                .short("v")
+                .multiple(true)
+                .help("Sets the level of verbosity"),
+        )
+        .subcommand(
+            SubCommand::with_name("test")
+                .about("controls testing features")
+                .version("1.3")
+                .author("Someone E. <someone_else@other.com>")
+                .arg(
+                    Arg::with_name("debug")
+                        .short("d")
+                        .help("print debug information verbosely"),
+                ),
+        )
+        .get_matches();
 
     // Gets a value for config if supplied by user, or defaults to "default.toml"
-    let config_file = matches.value_of("config").unwrap_or("config/default.toml").to_string();
+    let config_file = matches
+        .value_of("config")
+        .unwrap_or("config/default.toml")
+        .to_string();
     println!("Value for config: {}", config_file);
 
     let input_file = matches.value_of("input").unwrap().to_string();
@@ -112,9 +122,8 @@ fn parse_args() -> Args {
 }
 
 fn load_configs(config_file: &String) -> Config {
-
-    let config_contents = fs::read_to_string(config_file)
-        .expect("Something went wrong reading the file");
+    let config_contents =
+        fs::read_to_string(config_file).expect("Something went wrong reading the file");
 
     let config: Config = match toml::from_str(&config_contents) {
         Ok(config) => config,

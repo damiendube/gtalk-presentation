@@ -5,11 +5,11 @@ cargo build --release
 cargo run --release
 
 # WASM build
-cargo build --release --target wasm32-wasi
-cargo run --release --target wasm32-wasi
+cargo +beta build --release --target wasm32-wasi
+cargo +beta run --release --target wasm32-wasi
 
-# Linux buid
-cargo build --release --target=x86_64-unknown-linux-musl 
+# Linux buid with static musl
+cargo build --release --target=x86_64-unknown-linux-musl
 
 # Linux musl Docker build
 docker build -t gtalk-presentation .

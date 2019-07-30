@@ -39,6 +39,7 @@ RUN adduser -D -s /bin/sh -u 1000 -G gtalk-presentation gtalk-presentation
 WORKDIR /home/gtalk-presentation/bin/
 
 COPY --from=cargo-build /usr/src/gtalk-presentation/target/x86_64-unknown-linux-musl/release/gtalk-presentation .
+COPY --from=cargo-build /usr/src/gtalk-presentation/config/default.toml ./config.toml
 
 RUN chown gtalk-presentation:gtalk-presentation gtalk-presentation
 
@@ -46,4 +47,4 @@ USER gtalk-presentation
 
 EXPOSE 8080
 
-CMD ["./gtalk-presentation"]
+CMD ["/gtalk-presentation", "--input", "a", "--output", "b", "--config", "/config.toml"]
