@@ -1,6 +1,5 @@
 // Imports
-use actix_web::{web, App as ActixApp, HttpServer, Responder};
-use clap::{App as ClapApp, Arg, SubCommand};
+use clap::{App, Arg, SubCommand};
 use serde_derive::{Deserialize, Serialize};
 use std::fs;
 
@@ -18,24 +17,15 @@ struct Config {
 }
 
 // Main function
-fn main() -> std::io::Result<()> {
+fn main() {
     let args = parse_args();
 
     let config = load_configs(&args.config_file);
     println!("{:?}", config);
-
-    // Start Server
-    HttpServer::new(|| ActixApp::new().service(web::resource("/").to(index)))
-        .bind("0.0.0.0:8080")?
-        .run()
-}
-
-fn index() -> impl Responder {
-    format!("Hello World!")
 }
 
 fn parse_args() -> Args {
-    let matches = ClapApp::new("My Super Program")
+    let matches = App::new("My Super Program")
         .version("1.0")
         .author("Damien D. <damien.dube@gmail.com>")
         .about("Does awesome things")
