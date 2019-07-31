@@ -21,10 +21,12 @@ rustup target add --toolchain nightly x86_64-unknown-linux-musl
 ## Same Arch as system
 
 cargo build --release
+cargo run --release
 
 ## WASM build
 
 cargo +beta build --release --target wasm32-wasi
+wasmer run target/wasm32-wasi/release/gtalk-presentation.wasm
 
 ## Linux buid with static musl
 
@@ -33,7 +35,7 @@ CC_x86_64_unknown_linux_musl="x86_64-linux-musl-gcc" cargo build --release --tar
 ## Linux musl Docker build
 
 docker build -t gtalk-presentation .
-docker run --rm -p 8080:8080 -it gtalk-presentation
+docker run --rm -it gtalk-presentation
 
 ## Size Differences
 

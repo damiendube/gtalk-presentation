@@ -45,6 +45,4 @@ RUN chown gtalk-presentation:gtalk-presentation gtalk-presentation
 
 USER gtalk-presentation
 
-EXPOSE 8080
-
 CMD ["/gtalk-presentation", "--input", "a", "--output", "b", "--config", "/config.toml"]
